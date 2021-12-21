@@ -1,44 +1,49 @@
-#include "../lib/types.h"
-#include "../lib/command.h"
 #include <stdio.h>
+#include <stdlib.h>
 #include <sys/ipc.h>
 #include <sys/msg.h>
+#include <sys/time.h>
 #include <unistd.h>
 #include <string.h>
-#include <stdlib.h>
 #include <time.h>
 
-size_t COMM_SIZE = 64;
+#include "../lib/types.h"
+#include "../lib/protocol.h"
+#include "../lib/client_utils.h"
 
-int main(int argc, char *argv[]){
-    char user_name[16];
-    scanf("%15s", user_name);
-    fflush(stdin);
+#define SERVER_NUM 827498
 
-    int server_num;
-    int server_mid, local_mid;
-    local_mid = msgget(getpid(), IPC_CREAT | 0644);
-    while(1){
-        enter_query quer;
-        quer.num = getpid();
-        quer.type = 12;
-        printf("Podaj numer serwera: ");
-        scanf("%d", &server_num);
-        fflush(stdin);
-        server_mid = msgget(server_num, 0);
-        msgsnd(server_mid, &quer, 4, 0);
-        char *command = malloc(COMM_SIZE);
-        message mess;
-        strcpy(mess.sender, user_name);
+int main(){
+    int s_mid = msgget(SERVER_NUM, IPC_CREAT | 0644);
+    int l_mid = msgget(getpid(), IPC_CREAT | 0644);
+    struct query q1;
+    scanf("%s", q1.name);
+    q1.type = ENTER_QUERY;
+    q1.num = getpid();
+    msgsnd(s_mid, &q1, MESSAGE_SIZE, 0);
+    if(fork()){
+        struct query q;
         while(1){
-            printf("[%s]$ ", user_name);
+            msgrcv(l_mid, &q, MESSAGE_SIZE, 0, 0);
+            if(q.type == 2){
+                printf("[%s] %s: %s\n", q.time, q.name, q.text);
+            }else if(q.type == KICK){
+                return 0;
+            }
+        }
+    }else{
+        struct query q;
+        strcpy(q.name, q1.name);
+        while(1){
+            printf("Numer, wiadomosc\n");
+            scanf("%d", &q.num);
+            scanf("%s", q.text);
             fflush(stdin);
-            getline(&command, &COMM_SIZE, stdin);
-            command[strcspn(command, "\r\n")] = 0;
-            strcpy(mess.text, command);
-            strcpy(mess.time, "12:34:45");
-            msgsnd(local_mid, &mess, MESSAGE_SIZE, 0);
+            q.type = q.num;
+            strcpy(q.time, gettime());
+            msgsnd(s_mid, &q, MESSAGE_SIZE, 0);
         }
     }
     return 0;
 }
+    
