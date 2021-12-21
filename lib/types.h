@@ -1,7 +1,7 @@
 #ifndef TYPES
 #define TYPES
 
-#define MESSAGE_SIZE 96
+#define MESSAGE_SIZE 100
 
 struct query{
     long type;
@@ -14,6 +14,12 @@ struct query{
 struct user{
     int pid;
     char name[16];
+};
+
+struct channel{
+    char name[16];
+    int n_users;
+    struct user users[16];
 };
 
 #endif
