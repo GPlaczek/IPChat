@@ -29,17 +29,26 @@ int main(){
                 printf("[%s] %s: %s\n", q.time, q.name, q.text);
             }else if(q.type == KICK){
                 return 0;
+            }else if(q.type == LIST_USERS){
+                int n_users = q.num;
+                printf("%d\n", n_users);
+                for(int i = 0; i < n_users; i++){
+                    msgrcv(l_mid, &q, MESSAGE_SIZE, LIST_USERS, 0);
+                    printf("|%d: %s\n", q.num, q.name);
+                }
             }
         }
     }else{
         struct query q;
+        q.num = q1.num;
         strcpy(q.name, q1.name);
         while(1){
             printf("Numer, wiadomosc\n");
-            scanf("%d", &q.num);
-            scanf("%s", q.text);
+            scanf("%ld", &q.type);
+            if(q.type != 130){
+                scanf("%s", q.text);
+            }
             fflush(stdin);
-            q.type = q.num;
             strcpy(q.time, gettime());
             msgsnd(s_mid, &q, MESSAGE_SIZE, 0);
         }

@@ -1,7 +1,10 @@
 #include "../lib/serv_utils.h"
 #include "../lib/types.h"
+#include "../lib/protocol.h"
+
 #include <string.h>
 #include <stdio.h>
+#include <sys/msg.h>
 
 int join_channel(const struct query *q1, struct channel channel_array[16], int *nchannels){
     char exists = 0;
@@ -25,4 +28,19 @@ int join_channel(const struct query *q1, struct channel channel_array[16], int *
         return 1;
     }
     return -1;
+}
+
+int list_users(const struct user user_array[16], int n_users, int pid){
+    int mid = msgget(pid, IPC_CREAT | 0644);
+    struct query u1;
+    u1.type = LIST_USERS;
+    u1.num = n_users;
+    msgsnd(mid, &u1, MESSAGE_SIZE, 0);
+    if(!n_users) return 1;
+    for(int i = 0; i < n_users; i++){
+        u1.num= i+1;
+        strcpy(u1.name, user_array[i].name);
+        msgsnd(mid, &u1, MESSAGE_SIZE, 0);
+    }
+    return 0;
 }

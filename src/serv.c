@@ -42,6 +42,8 @@ int main(){
             msgsnd(rec_q, &q1, MESSAGE_SIZE, 0);
         }else if(q1.type == CHANNEL){
             printf("%d\n", join_channel(&q1, channel_array, &nchannels));
+        }else if(q1.type == LIST_USERS){
+            list_users(user_array, nusers, q1.num);
         }
     }
     return 0;
