@@ -6,6 +6,10 @@ serv:
 client:
 	gcc -Wall -o bin/client src/client.c def/client*
 
+kill:
+	killall -9 serv
+	killall -9 client
+	ipcrm -a
 
 clean:
 	rm -rf bin/*
