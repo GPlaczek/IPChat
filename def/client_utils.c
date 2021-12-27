@@ -14,3 +14,4 @@ char *gettime(){
     strftime(buf, 16, "%H:%M:%S", info);
     return buf;
 }
+

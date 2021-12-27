@@ -4,6 +4,7 @@
 #include <sys/msg.h>
 #include <unistd.h>
 #include <string.h>
+#include <stdlib.h>
 
 #include "../lib/types.h"
 #include "../lib/protocol.h"
@@ -44,6 +45,19 @@ int main(){
             printf("%d\n", join_channel(&q1, channel_array, &nchannels));
         }else if(q1.type == LIST_USERS){
             list_users(user_array, nusers, q1.num);
+        }else if(q1.type == EXIT){
+            int mid = msgget(q1.num, IPC_CREAT | 0644);
+            q1.type = KICK;
+            int to_delete;
+            for (int i = 0; i < nusers; i++){
+                if (!strcmp(q1.name, user_array[i].name)) {to_delete = i; break;}
+            }
+            for (int i = to_delete; i < nusers-1; i++){
+                user_array[i].pid = user_array[i+1].pid;
+                strcpy(user_array[i].name, user_array[i+1].name);
+            }
+            nusers--;
+            msgsnd(mid, &q1, MESSAGE_SIZE, 0);
         }
     }
     return 0;

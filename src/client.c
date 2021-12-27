@@ -12,6 +12,7 @@
 #include "../lib/client_utils.h"
 
 #define SERVER_NUM 827498
+size_t mess_size = MESSAGE_SIZE;
 
 int main(){
     int s_mid = msgget(SERVER_NUM, IPC_CREAT | 0644);
@@ -26,8 +27,9 @@ int main(){
         while(1){
             msgrcv(l_mid, &q, MESSAGE_SIZE, 0, 0);
             if(q.type == 2){
-                printf("[%s] %s: %s\n", q.time, q.name, q.text);
+                printf("[%s] %s:%s\n", q.time, q.name, q.text);
             }else if(q.type == KICK){
+                msgctl(l_mid, IPC_RMID, NULL);
                 return 0;
             }else if(q.type == LIST_USERS){
                 int n_users = q.num;
@@ -42,11 +44,15 @@ int main(){
         struct query q;
         q.num = q1.num;
         strcpy(q.name, q1.name);
+        char *str = q.text;
         while(1){
             printf("Numer, wiadomosc\n");
             scanf("%ld", &q.type);
-            if(q.type != 130){
-                scanf("%s", q.text);
+            if(q.type < 130){
+                // scanf("%s", q.text);
+                fflush(stdin);
+                getline(&str, &mess_size, stdin);
+                str[strcspn(str, "\r\n")] = 0;
             }
             fflush(stdin);
             strcpy(q.time, gettime());
