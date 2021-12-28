@@ -52,10 +52,9 @@ int main(){
             for (int i = 0; i < nusers; i++){
                 if (!strcmp(q1.name, user_array[i].name)) {to_delete = i; break;}
             }
-            for (int i = to_delete; i < nusers-1; i++){
-                user_array[i].pid = user_array[i+1].pid;
-                strcpy(user_array[i].name, user_array[i+1].name);
-            }
+            nusers--;
+            user_array[to_delete].pid = user_array[nusers].pid;
+            strcpy(user_array[to_delete].name, user_array[nusers].name);
             nusers--;
             msgsnd(mid, &q1, MESSAGE_SIZE, 0);
         }
