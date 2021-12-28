@@ -1,6 +1,8 @@
 #ifndef PROTOCOL
 #define PROTOCOL
 
+#define CHANNEL_NUM(x) x-16
+
 #define ENTER_QUERY 127
 #define KICK 128
 #define CHANNEL 129
