@@ -45,22 +45,10 @@ int main(){
         }else if(q1.type < 32){
             // PRZESYŁANIE WIADOMOŚCI DO WSZYSTKICH UŻYTKOWNIKÓW POŁĄCZONYCH Z KANAŁEM
             int chnl = CHANNEL_NUM(q1.type);
-            q1.type = 2; // temporary
-            printf("%d; %d\n", chnl, channel_array[chnl].n_users);
-            for(int i = 0; i < channel_array[chnl].n_users; i++){
-                struct user *temp = &(channel_array[chnl].users[i]);
-                int rec_q = msgget(temp->pid, IPC_CREAT | 0644);
-                msgsnd(rec_q, &q1, MESSAGE_SIZE, 0);
-                printf("SENT %d\n", temp->pid);
-            }
+            send_to_channel(&channel_array[chnl], &q1);
         }else if(q1.type == CHANNEL){
             // PODŁĄCZANIE UŻYTKOWNIKÓW DO KANAŁU
             join_channel(&q1, channel_array, &nchannels);
-            for(int i = 0; i < nchannels; i++){
-                for(int j = 0; j < channel_array[i].n_users; j++){
-                    printf("%d\n", channel_array[i].users[j].pid);
-                }
-            }
         }else if(q1.type == LIST_USERS){
             // WYSYŁANIE UŻYTKOWNIKOM LISTY UŻYTKOWNIKÓW PODŁĄCZONYCH DO SERWERA
             list_users(user_array, nusers, q1.num);
