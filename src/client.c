@@ -38,6 +38,17 @@ int main(){
                     msgrcv(l_mid, &q, MESSAGE_SIZE, LIST_USERS, 0);
                     printf("|%d: %s\n", q.num, q.name);
                 }
+            }else if(q.type == LIST_CHANNELS){
+                int n_channels = q.num;
+                for(int i = 0; i < n_channels; i++){
+                    msgrcv(l_mid, &q, MESSAGE_SIZE, LIST_CHANNELS, 0);
+                    printf("%s %s\n", q.text, q.name);
+                    int n_users = q.num;
+                    for(int j = 0; j < n_users; j++){
+                        msgrcv(l_mid, &q, MESSAGE_SIZE, LIST_CHANNELS, 0);
+                        printf("\t|%s\n", q.name);
+                    }
+                }
             }
         }
     }else{

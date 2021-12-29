@@ -7,6 +7,7 @@
 #define KICK 128
 #define CHANNEL 129
 #define LIST_USERS 130
-#define EXIT 131
+#define LIST_CHANNELS 131
+#define EXIT 132
 
 #endif

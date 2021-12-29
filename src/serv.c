@@ -52,6 +52,8 @@ int main(){
         }else if(q1.type == LIST_USERS){
             // WYSYŁANIE UŻYTKOWNIKOM LISTY UŻYTKOWNIKÓW PODŁĄCZONYCH DO SERWERA
             list_users(user_array, nusers, q1.num);
+        }else if(q1.type == LIST_CHANNELS){
+            list_channels(channel_array, nchannels, q1.num);
         }else if(q1.type == EXIT){
             // ROZŁĄCZANIE UŻYTKOWNIKÓW
             int mid = msgget(q1.num, IPC_CREAT | 0644);

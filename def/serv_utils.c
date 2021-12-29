@@ -45,6 +45,26 @@ int list_users(const struct user user_array[16], int n_users, int pid){
     return 0;
 }
 
+int list_channels(const struct channel channels[16], int n_channels, int pid){
+    int mid = msgget(pid, IPC_CREAT | 0644);
+    struct query u1;
+    u1.type = LIST_CHANNELS;
+    u1.num = n_channels;
+    msgsnd(mid, &u1, MESSAGE_SIZE, 0);
+    if(!n_channels) return 1;
+    for(int i = 0; i < n_channels; i++){
+        u1.num = channels[i].n_users;
+        strcpy(u1.name, channels[i].name);
+        sprintf(u1.text, "%d", i+16);
+        msgsnd(mid, &u1, MESSAGE_SIZE, 0);
+        for(int j = 0; j < channels[i].n_users; j++){
+            strcpy(u1.name, channels[i].users[j].name);
+            msgsnd(mid, &u1, MESSAGE_SIZE, 0);
+        }
+    }
+    return 0;
+}
+
 void send_to_channel(const struct channel *c, struct query *q1){
     q1->type = 2;
     for(int i = 0; i < c->n_users; i++){
