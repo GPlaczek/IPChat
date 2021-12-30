@@ -45,10 +45,13 @@ int main(){
         }else if(q1.type < 32){
             // PRZESYŁANIE WIADOMOŚCI DO WSZYSTKICH UŻYTKOWNIKÓW POŁĄCZONYCH Z KANAŁEM
             int chnl = CHANNEL_NUM(q1.type);
+            q1.num = q1.type;
             send_to_channel(&channel_array[chnl], &q1);
         }else if(q1.type == CHANNEL){
             // PODŁĄCZANIE UŻYTKOWNIKÓW DO KANAŁU
-            join_channel(&q1, channel_array, &nchannels);
+            int mid = msgget(q1.num, IPC_CREAT | 0644);
+            q1.num = join_channel(&q1, channel_array, &nchannels);
+            msgsnd(mid, &q1, MESSAGE_SIZE, 0);
         }else if(q1.type == LIST_USERS){
             // WYSYŁANIE UŻYTKOWNIKOM LISTY UŻYTKOWNIKÓW PODŁĄCZONYCH DO SERWERA
             list_users(user_array, nusers, q1.num);

@@ -14,7 +14,7 @@ int join_channel(const struct query *q1, struct channel channel_array[16], int *
             channel_array[i].users[channel_array[i].n_users].pid = q1->num;
             channel_array[i].n_users++;
             exists = 1;
-            return 0;
+            return i+16;
             break;
         }
     }
@@ -25,9 +25,9 @@ int join_channel(const struct query *q1, struct channel channel_array[16], int *
         channel_array[*nchannels].users[channel_array[*nchannels].n_users].pid = q1->num;
         channel_array[*nchannels].n_users++;
         (*nchannels)++;
-        return 1;
+        return (*nchannels)+15;
     }
-    return -1;
+    return 0;
 }
 
 int list_users(const struct user user_array[16], int n_users, int pid){
@@ -66,7 +66,6 @@ int list_channels(const struct channel channels[16], int n_channels, int pid){
 }
 
 void send_to_channel(const struct channel *c, struct query *q1){
-    q1->type = 2;
     for(int i = 0; i < c->n_users; i++){
         int rec_q = msgget(c->users[i].pid, IPC_CREAT | 0644);
         msgsnd(rec_q, q1, MESSAGE_SIZE, 0);
