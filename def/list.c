@@ -1,10 +1,16 @@
 #include "../lib/types.h"
 #include "../lib/list.h"
 #include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
 
 void push(struct q_list *l, struct query item){
     struct list_item *to_push = malloc(sizeof(struct list_item));
-    to_push->content = item;
+    strcpy(to_push->content.time, item.time);
+    strcpy(to_push->content.name, item.name);
+    strcpy(to_push->content.text, item.text);
+    to_push->content.num = item.num;
+    to_push->content.type = item.type;
     l->size++;
     if(l->front == NULL){
         to_push->next = NULL;
@@ -30,4 +36,14 @@ void init(struct q_list *l){
     l->back = NULL;
     l->front = NULL;
     l->size = 0;
+}
+
+void show(const struct q_list *l){
+    if(l->back == NULL){
+        printf("Pozdrowienia dla sąsiada\n");
+        return;
+    }
+    for(struct list_item *temp = l->back; temp != NULL; temp = temp->next){
+        printf("[%s] %s: %s\n", temp->content.time, temp->content.name, temp->content.text);
+    }
 }

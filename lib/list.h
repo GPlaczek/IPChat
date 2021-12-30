@@ -19,5 +19,6 @@ struct list_item{
 
 void push(struct q_list*, struct query item);
 void init(struct q_list*);
+void show(const struct q_list*);
 
 #endif
