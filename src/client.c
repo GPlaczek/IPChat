@@ -40,7 +40,6 @@ int main(){
                     }
                 }
             }else if(q.type == KICK){
-                msgctl(l_mid, IPC_RMID, NULL);
                 return 0;
             }else if(q.type == CHANNEL){
                 if(q.num){
@@ -87,7 +86,6 @@ int main(){
         while(1){
             scanf("%ld", &q.type);
             if(q.type < 130){
-                // scanf("%s", q.text);
                 fflush(stdin);
                 getline(&str, &mess_size, stdin);
                 str[strcspn(str, "\r\n")] = 0;

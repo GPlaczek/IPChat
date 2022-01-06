@@ -7,9 +7,9 @@ client:
 	gcc -Wall -o bin/client src/client.c def/client* def/list.c
 
 kill:
-	killall -9 serv
-	killall -9 client
-	ipcrm -a
+	ipcrm -a || true
+	killall -9 serv || true
+	killall -9 client || true
 
 clean:
 	rm -rf bin/*

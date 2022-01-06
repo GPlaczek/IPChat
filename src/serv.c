@@ -10,7 +10,7 @@
 #include "../lib/protocol.h"
 #include "../lib/serv_utils.h"
 
-#define SERVER_NUM 827498 
+#define SERVER_NUM 827498
 
 struct user user_array[16];
 struct channel channel_array[16];
@@ -22,6 +22,7 @@ int main(){
     struct query q1;
     while(1){
         msgrcv(mid, &q1, MESSAGE_SIZE, 0, 0);
+        printf("%ld\n", q1.type);
         if(q1.type == ENTER_QUERY){
             // PODŁĄCZENIE UŻYTKOWNIKÓW DO SERWERA
             char enters = 1;
@@ -68,8 +69,8 @@ int main(){
             nusers--;
             user_array[to_delete].pid = user_array[nusers].pid;
             strcpy(user_array[to_delete].name, user_array[nusers].name);
-            nusers--;
             msgsnd(mid, &q1, MESSAGE_SIZE, 0);
+            fflush(stdout);
         }
     }
     return 0;
