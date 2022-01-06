@@ -46,8 +46,15 @@ int main(){
         }else if(q1.type < 32){
             // PRZESYŁANIE WIADOMOŚCI DO WSZYSTKICH UŻYTKOWNIKÓW POŁĄCZONYCH Z KANAŁEM
             int chnl = CHANNEL_NUM(q1.type);
-            q1.num = q1.type;
-            send_to_channel(&channel_array[chnl], &q1);
+            if (access_to_channel(&channel_array[chnl], q1.num) == 1){
+                q1.num = q1.type;
+                send_to_channel(&channel_array[chnl], &q1);
+            }else{
+                int mid = msgget(q1.num, IPC_CREAT | 0644);
+                q1.type = ERROR;
+                msgsnd(mid, &q1, MESSAGE_SIZE, 0);
+            }
+            
         }else if(q1.type == CHANNEL){
             // PODŁĄCZANIE UŻYTKOWNIKÓW DO KANAŁU
             int mid = msgget(q1.num, IPC_CREAT | 0644);
@@ -67,10 +74,21 @@ int main(){
                 if (!strcmp(q1.name, user_array[i].name)) {to_delete = i; break;}
             }
             nusers--;
+            // wyrejestrowanie użytkownika ze wszystkich kanałów
+            for (int i = 0; i < nchannels; i++){
+                for (int j = 0; channel_array[i].n_users; j++){
+                    if (channel_array[i].users[j].pid == q1.num){
+                        channel_array[i].n_users--;
+                        strcpy(channel_array[i].users[j].name, "");
+                        break;
+                    }
+                }
+            }
+            //deregister_from_channels(&channel_array, &q1, &nchannels);
+            //
             user_array[to_delete].pid = user_array[nusers].pid;
             strcpy(user_array[to_delete].name, user_array[nusers].name);
             msgsnd(mid, &q1, MESSAGE_SIZE, 0);
-            fflush(stdout);
         }
     }
     return 0;

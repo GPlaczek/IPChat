@@ -65,10 +65,32 @@ int list_channels(const struct channel channels[16], int n_channels, int pid){
     return 0;
 }
 
+int access_to_channel(const struct channel *c, int user_pid){
+    for(int i = 0; i < c->n_users; i++){
+        if (c->users[i].pid == user_pid){
+            return 1;
+        } 
+    }return 0;
+}
+
 void send_to_channel(const struct channel *c, struct query *q1){
+    q1->type = 2;
     for(int i = 0; i < c->n_users; i++){
         int rec_q = msgget(c->users[i].pid, IPC_CREAT | 0644);
         msgsnd(rec_q, q1, MESSAGE_SIZE, 0);
         printf("%d\n", c->users[i].pid);
     }
 }
+/*
+void deregister_from_channels(const struct channel** c, struct query* q1, int *n_channels){
+    for (int i = 0; i < *n_channels; i++){
+        for(int j = 0; j < c[i]->n_users; j++){
+            if (c[i]->users[j].pid == q1->num){
+                (c[i]->n_users)--;
+                strcpy(c[i]->users[j].name, "");
+                break;
+            }
+        }
+    }
+}
+*/

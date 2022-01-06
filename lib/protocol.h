@@ -9,5 +9,6 @@
 #define LIST_USERS 130
 #define LIST_CHANNELS 131
 #define EXIT 132
+#define ERROR 133
 
 #endif

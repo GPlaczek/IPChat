@@ -16,6 +16,10 @@ size_t mess_size = MESSAGE_SIZE;
 
 struct channel_buffer buffers[16];
 
+// Gdy uzytkownik zamyka czat poprzez komende EXIT występują problemy przy próbie dołączenia
+// nowego użytkownika. Problem występuje prawdopodobnie ze wzgledu na to, że odpowiednie Message Queues 
+// nie zostają zamknięte.
+
 int main(){
     int s_mid = msgget(SERVER_NUM, IPC_CREAT | 0644);
     int l_mid = msgget(getpid(), IPC_CREAT | 0644);
@@ -76,6 +80,9 @@ int main(){
                         show(&buffers[i].buffer);
                     }
                 }
+            }
+            else if(q.type == ERROR){
+                printf("Coś poszło nie tak...\n");
             }
         }
     }else{
