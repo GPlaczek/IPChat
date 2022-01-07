@@ -54,11 +54,15 @@ int main(){
                 q1.type = ERROR;
                 msgsnd(mid, &q1, MESSAGE_SIZE, 0);
             }
-            
         }else if(q1.type == CHANNEL){
             // PODŁĄCZANIE UŻYTKOWNIKÓW DO KANAŁU
             int mid = msgget(q1.num, IPC_CREAT | 0644);
             q1.num = join_channel(&q1, channel_array, &nchannels);
+            msgsnd(mid, &q1, MESSAGE_SIZE, 0);
+        }else if(q1.type == EXIT_CHANNEL){
+            // OPUSZCZANIE KANAŁU
+            int mid = msgget(q1.num, IPC_CREAT | 0644);
+            q1.num = exit_channel(&q1, channel_array, &nchannels);
             msgsnd(mid, &q1, MESSAGE_SIZE, 0);
         }else if(q1.type == LIST_USERS){
             // WYSYŁANIE UŻYTKOWNIKOM LISTY UŻYTKOWNIKÓW PODŁĄCZONYCH DO SERWERA
@@ -74,18 +78,7 @@ int main(){
                 if (!strcmp(q1.name, user_array[i].name)) {to_delete = i; break;}
             }
             nusers--;
-            // wyrejestrowanie użytkownika ze wszystkich kanałów
-            for (int i = 0; i < nchannels; i++){
-                for (int j = 0; channel_array[i].n_users; j++){
-                    if (channel_array[i].users[j].pid == q1.num){
-                        channel_array[i].n_users--;
-                        strcpy(channel_array[i].users[j].name, "");
-                        break;
-                    }
-                }
-            }
-            //deregister_from_channels(&channel_array, &q1, &nchannels);
-            //
+            exit_all_channels(&q1, channel_array, &nchannels);
             user_array[to_delete].pid = user_array[nusers].pid;
             strcpy(user_array[to_delete].name, user_array[nusers].name);
             msgsnd(mid, &q1, MESSAGE_SIZE, 0);

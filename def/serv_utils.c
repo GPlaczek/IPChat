@@ -30,6 +30,23 @@ int join_channel(const struct query *q1, struct channel channel_array[16], int *
     return 0;
 }
 
+int exit_channel(const struct query *q1, struct channel channel_array[16], int *nchannels){
+    for(int i = 0; i < *nchannels; i++){
+        if(!strcmp(q1->text, channel_array[i].name)){
+            for (int j = 0; j < channel_array[i].n_users; j++){
+                if (channel_array[i].users[j].pid == q1->num){
+                    strcpy(channel_array[i].users[j].name, channel_array[i].users[channel_array[i].n_users-1].name);
+                    channel_array[i].users[j].pid = channel_array[i].users[channel_array[i].n_users-1].pid;
+                    channel_array[i].n_users--;
+                    return 1;
+                    break;
+                }
+            }
+        }
+    }
+    return 0;
+}
+
 int list_users(const struct user user_array[16], int n_users, int pid){
     int mid = msgget(pid, IPC_CREAT | 0644);
     struct query u1;
@@ -81,16 +98,16 @@ void send_to_channel(const struct channel *c, struct query *q1){
         printf("%d\n", c->users[i].pid);
     }
 }
-/*
-void deregister_from_channels(const struct channel** c, struct query* q1, int *n_channels){
-    for (int i = 0; i < *n_channels; i++){
-        for(int j = 0; j < c[i]->n_users; j++){
-            if (c[i]->users[j].pid == q1->num){
-                (c[i]->n_users)--;
-                strcpy(c[i]->users[j].name, "");
+
+void exit_all_channels(const struct query *q1, struct channel channel_array[16], int *nchannels){
+    for (int i = 0; i < *nchannels; i++){
+        for (int j = 0; j < channel_array[i].n_users; j++){
+            if (channel_array[i].users[j].pid == q1->num){
+                strcpy(channel_array[i].users[j].name, channel_array[i].users[channel_array[i].n_users-1].name);
+                channel_array[i].users[j].pid = channel_array[i].users[channel_array[i].n_users-1].pid;
+                channel_array[i].n_users--;
                 break;
             }
         }
     }
 }
-*/

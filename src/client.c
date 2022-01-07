@@ -16,9 +16,9 @@ size_t mess_size = MESSAGE_SIZE;
 
 struct channel_buffer buffers[16];
 
-// Gdy uzytkownik zamyka czat poprzez komende EXIT występują problemy przy próbie dołączenia
-// nowego użytkownika. Problem występuje prawdopodobnie ze wzgledu na to, że odpowiednie Message Queues 
-// nie zostają zamknięte.
+// Gdy użytkownik zamyka czat poprzez komendę EXIT występują problemy przy próbie dołączenia
+// nowego użytkownika. Przy próbie wpisania czegokolwiek w terminalu, z którego łączył się wcześniej
+// rozłączony użytkownik z jakiegoś powodu samoistnie powstaje nowa kolejka komunikatów.
 
 int main(){
     int s_mid = msgget(SERVER_NUM, IPC_CREAT | 0644);
@@ -44,6 +44,7 @@ int main(){
                     }
                 }
             }else if(q.type == KICK){
+                msgctl(l_mid, IPC_RMID, NULL);
                 return 0;
             }else if(q.type == CHANNEL){
                 if(q.num){
@@ -54,6 +55,13 @@ int main(){
                     printf("Udało się uzyskać połączenie z kanałem\n");
                 }else{
                     printf("Nie udało się uzyskać połączenia z kanałem\n");
+                }
+            }else if(q.type == EXIT_CHANNEL){
+                if(q.num){
+                    printf("Zostałeś wyrejestrowany z kanału %s\n", q.text);
+                }
+                else{
+                    printf("Kanał o podanej nazwie nie istnieje lub do niego nie należysz\n");
                 }
             }else if(q.type == LIST_USERS){
                 int n_users = q.num;

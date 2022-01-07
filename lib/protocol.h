@@ -3,6 +3,7 @@
 
 #define CHANNEL_NUM(x) x-16
 
+#define EXIT_CHANNEL 126
 #define ENTER_QUERY 127
 #define KICK 128
 #define CHANNEL 129
