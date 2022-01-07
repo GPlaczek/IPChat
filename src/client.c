@@ -54,7 +54,7 @@ int main(){
                     nchannels++;
                     printf("Udało się uzyskać połączenie z kanałem\n");
                 }else{
-                    printf("Nie udało się uzyskać połączenia z kanałem\n");
+                    printf("Już należysz do kanału o podanej nazwie\n");
                 }
             }else if(q.type == EXIT_CHANNEL){
                 if(q.num){
