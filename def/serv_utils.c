@@ -97,7 +97,6 @@ int access_to_channel(const struct channel *c, int user_pid){
 }
 
 void send_to_channel(const struct channel *c, struct query *q1){
-    q1->type = 2;
     for(int i = 0; i < c->n_users; i++){
         int rec_q = msgget(c->users[i].pid, IPC_CREAT | 0644);
         msgsnd(rec_q, q1, MESSAGE_SIZE, 0);
