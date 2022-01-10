@@ -40,9 +40,24 @@ int main(){
             }
         }else if(q1.type < 16){
             // PRZESYŁANIE WIADOMOŚCI PRYWATNYCH
-            int rec_q = msgget(user_array[q1.type - 1].pid, IPC_CREAT | 0644);
-            q1.type = 2;
-            msgsnd(rec_q, &q1, MESSAGE_SIZE, 0);
+            char valid = 0;
+            for(int i = 0; i < nchannels; i++){
+                char rec = 0;
+                char snd = 0;
+                for(int j = 0; j < channel_array[i].n_users; j++){
+                    if(channel_array[i].users[j].pid == q1.num){ snd = 1; }
+                    if(channel_array[i].users[j].pid == user_array[q1.type - 1].pid){ rec = 1; }
+                }
+                if(rec && snd){
+                    valid = 1;
+                    break;
+                }
+            }
+            if(valid){
+                int rec_q = msgget(user_array[q1.type - 1].pid, IPC_CREAT | 0644);
+                q1.type = 2;
+                msgsnd(rec_q, &q1, MESSAGE_SIZE, 0);
+            }
         }else if(q1.type < 32){
             // PRZESYŁANIE WIADOMOŚCI DO WSZYSTKICH UŻYTKOWNIKÓW POŁĄCZONYCH Z KANAŁEM
             int chnl = CHANNEL_NUM(q1.type);
