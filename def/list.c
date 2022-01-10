@@ -40,7 +40,7 @@ void init(struct q_list *l){
 
 void show(const struct q_list *l){
     if(l->back == NULL){
-        printf("Pozdrowienia dla sąsiada\n");
+        printf("bufor jest pusty\n");
         return;
     }
     for(struct list_item *temp = l->back; temp != NULL; temp = temp->next){

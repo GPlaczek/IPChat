@@ -35,7 +35,7 @@ int main(){
         while(1){
             msgrcv(l_mid, &q, MESSAGE_SIZE, 0, 0);
             if(q.type == 2){
-                printf("[%s] %s:%s\n", q.time, q.name, q.text);
+                printf("{private} [%s] %s:%s\n", q.time, q.name, q.text);
             }else if(q.type > 15 && q.type < 32){
                 for(int i = 0; i < nchannels; i++){
                     if(buffers[i].num == q.type){
@@ -110,7 +110,6 @@ int main(){
                 strcpy(q.time, gettime());
                 msgsnd(s_mid, &q, MESSAGE_SIZE, 0);
             }else if(q.type < 272){
-                strcpy(q.text, "aa tam wojtek nie marodz");
                 msgsnd(l_mid, &q, MESSAGE_SIZE, 0);
             }
         }
