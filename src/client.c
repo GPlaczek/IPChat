@@ -35,7 +35,9 @@ int main(){
         while(1){
             msgrcv(l_mid, &q, MESSAGE_SIZE, 0, 0);
             if(q.type == 2){
+                bold_text();
                 printf("{private} [%s] %s:%s\n", q.time, q.name, q.text);
+                reset_text(); // do naprawy
             }else if(q.type > 15 && q.type < 32){
                 for(int i = 0; i < nchannels; i++){
                     if(buffers[i].num == q.type){
@@ -43,6 +45,12 @@ int main(){
                         break;
                     }
                 }
+            }else if(q.type == ENTER_QUERY){
+                system("clear");
+                bold_text();
+                printf("Witaj na czacie %s\n", q1.name);
+                reset_text();
+                instructions();
             }else if(q.type == KICK){
                 msgctl(l_mid, IPC_RMID, NULL);
                 return 0;
@@ -81,17 +89,17 @@ int main(){
                     }
                 }
             }else if(q.type > 255 && q.type < 272){
+                bold_text();
                 for(int i = 0; i < nchannels; i++){
                     if(buffers[i].num == q.type - 240){
                         printf("%s:\n", buffers[i].name);
                         printf("---------\n");
                         show(&buffers[i].buffer);
                     }
-                }
-            }
-            else if(q.type == ERROR){
-                printf("Coś poszło nie tak...\n");
-            }
+                }reset_text();
+            }else if(q.type == ERROR){printf("Coś poszło nie tak...\n");
+            }else if(q.type == HELP){instructions();
+            }else if(q.type == CLEAR){system("clear");}
         }
     }else{
         struct query q;

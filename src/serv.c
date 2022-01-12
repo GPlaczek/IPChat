@@ -33,6 +33,9 @@ int main(){
                 user_array[nusers].pid = q1.num;
                 strcpy(user_array[nusers].name, q1.name);
                 nusers++;
+                int mid = msgget(q1.num, IPC_CREAT | 0644);
+                q1.type = ENTER_QUERY;
+                msgsnd(mid, &q1, MESSAGE_SIZE, 0);
             }else{
                 int mid = msgget(q1.num, IPC_CREAT | 0644);
                 q1.type = KICK;
@@ -57,6 +60,11 @@ int main(){
                 int rec_q = msgget(user_array[q1.type - 1].pid, IPC_CREAT | 0644);
                 q1.type = 2;
                 msgsnd(rec_q, &q1, MESSAGE_SIZE, 0);
+            }
+            else{
+                int mid = msgget(q1.num, IPC_CREAT | 0644);
+                q1.type = ERROR;
+                msgsnd(mid, &q1, MESSAGE_SIZE, 0);
             }
         }else if(q1.type < 32){
             // PRZESYŁANIE WIADOMOŚCI DO WSZYSTKICH UŻYTKOWNIKÓW POŁĄCZONYCH Z KANAŁEM
@@ -96,6 +104,9 @@ int main(){
             exit_all_channels(&q1, channel_array, &nchannels);
             user_array[to_delete].pid = user_array[nusers].pid;
             strcpy(user_array[to_delete].name, user_array[nusers].name);
+            msgsnd(mid, &q1, MESSAGE_SIZE, 0);
+        }else if(q1.type == HELP || q1.type == CLEAR){
+            int mid = msgget(q1.num, IPC_CREAT | 0644);
             msgsnd(mid, &q1, MESSAGE_SIZE, 0);
         }
     }
