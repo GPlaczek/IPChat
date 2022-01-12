@@ -13,5 +13,6 @@
 #define HELP 133
 #define EXIT 134
 #define ERROR 135
+#define LOGIN_FAILED 136
 
 #endif

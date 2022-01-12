@@ -97,6 +97,10 @@ int main(){
                         show(&buffers[i].buffer);
                     }
                 }reset_text();
+            }else if (q.type == LOGIN_FAILED){
+                printf("Odmowa dostępu. Użytkownik o podanej nazwie jest już zalogowany w systemie.\n");
+                msgctl(l_mid, IPC_RMID, NULL);
+                return 0;
             }else if(q.type == ERROR){printf("Coś poszło nie tak...\n");
             }else if(q.type == HELP){instructions();
             }else if(q.type == CLEAR){system("clear");}
