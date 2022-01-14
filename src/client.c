@@ -6,6 +6,7 @@
 #include <unistd.h>
 #include <string.h>
 #include <time.h>
+#include <signal.h>
 
 #include "../lib/types.h"
 #include "../lib/protocol.h"
@@ -53,6 +54,7 @@ int main(){
                 instructions();
             }else if(q.type == KICK){
                 msgctl(l_mid, IPC_RMID, NULL);
+                kill(0, SIGKILL);
                 return 0;
             }else if(q.type == CHANNEL){
                 if(q.num){
