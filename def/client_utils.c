@@ -34,4 +34,7 @@ void instructions(){
 
 void bold_text(){printf("\033[32;1m");}
 
-void reset_text(){printf("\x1B[0m");}
+void reset_text(){
+    printf("\x1B[0m");
+    fflush(stdout);
+}

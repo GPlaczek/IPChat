@@ -17,10 +17,6 @@ size_t mess_size = MESSAGE_SIZE;
 
 struct channel_buffer buffers[16];
 
-// Gdy użytkownik zamyka czat poprzez komendę EXIT występują problemy przy próbie dołączenia
-// nowego użytkownika. Przy próbie wpisania czegokolwiek w terminalu, z którego łączył się wcześniej
-// rozłączony użytkownik z jakiegoś powodu samoistnie powstaje nowa kolejka komunikatów.
-
 int main(){
     int s_mid = msgget(SERVER_NUM, IPC_CREAT | 0644);
     int l_mid = msgget(getpid(), IPC_CREAT | 0644);
