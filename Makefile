@@ -1,9 +1,11 @@
 all: serv client
 
 serv:
+	mkdir -p bin/
 	gcc -Wall -o bin/serv src/serv.c def/serv*
 
 client:
+	mkdir -p bin/
 	gcc -Wall -o bin/client src/client.c def/client* def/list.c
 
 kill:
