@@ -8,7 +8,8 @@
 
 int join_channel(const struct query *q1, struct channel channel_array[16], int *nchannels){
     char exists = 0;
-    for(int i = 0; i < *nchannels; i++){ // dodawanie użytkownika do istniejącego kanału
+    int i;
+    for(i = 0; i < *nchannels; i++){ // dodawanie użytkownika do istniejącego kanału
         if(!strcmp(q1->text, channel_array[i].name)){
             for (int j = 0; j < channel_array[i].n_users; j++){ // sprawdzanie czy dany użytkownik nie należy już do tego kanału
                 if (channel_array[i].users[j].pid == q1->num){
@@ -16,15 +17,20 @@ int join_channel(const struct query *q1, struct channel channel_array[16], int *
                     break;
                 }
             }
-            strcpy(channel_array[i].users[channel_array[i].n_users].name, q1->name);
-            channel_array[i].users[channel_array[i].n_users].pid = q1->num;
-            channel_array[i].n_users++;
             exists = 1;
-            return i+16;
+            break;
+        }else if(channel_array[i].n_users == 0){
+            strcpy(channel_array[i].name, q1->text);
+            exists = 1;
             break;
         }
     }
-    if(!exists){ // tworzenie kanału i dodawanie do niego użytkownika
+    if(exists){
+        strcpy(channel_array[i].users[channel_array[i].n_users].name, q1->name);
+        channel_array[i].users[channel_array[i].n_users].pid = q1->num;
+        channel_array[i].n_users++;
+        return i+16;
+    }else{ // tworzenie kanału i dodawanie do niego użytkownika
         channel_array[*nchannels].n_users = 0;
         strcpy(channel_array[*nchannels].users[channel_array[*nchannels].n_users].name, q1->name);
         strcpy(channel_array[*nchannels].name, q1->text);
