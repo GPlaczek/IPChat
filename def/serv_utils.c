@@ -11,6 +11,7 @@ int join_channel(const struct query *q1, struct channel channel_array[16], int *
     int i;
     for(i = 0; i < *nchannels; i++){ // dodawanie użytkownika do istniejącego kanału
         if(!strcmp(q1->text, channel_array[i].name)){
+            if(channel_array[i].n_users > 15) return 0;
             for (int j = 0; j < channel_array[i].n_users; j++){ // sprawdzanie czy dany użytkownik nie należy już do tego kanału
                 if (channel_array[i].users[j].pid == q1->num){
                     return 0;

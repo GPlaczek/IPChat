@@ -29,7 +29,7 @@ int main(){
             for(int i = 0; i < nusers; i++){
                 if(!strcmp(q1.name, user_array[i].name)){ enters = 0; break; }
             }
-            if(enters){
+            if(enters && nusers < 16){
                 user_array[nusers].pid = q1.num;
                 strcpy(user_array[nusers].name, q1.name);
                 nusers++;
