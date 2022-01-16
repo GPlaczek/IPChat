@@ -10,7 +10,7 @@ make
 ```
 It creates two executable files in bin/ directory - *client* and *serv*. 
 
-Additionally, it has a feauture that kills all message queues and currently running programs when typed into the terminal:
+Additionally, it has a feature that kills all message queues and currently running programs when typed into the terminal:
 
 ```
 make kill
@@ -32,4 +32,12 @@ There are definitions of the above are contained in *def* directory.
 
 ### Protocol
 
-Communication between components takes place by sending data structures, called *queries*, through message queues between the client and the server. Each of queries has its own unique number *(id)* - which is the process identifier obtained by getpid() function, *message* and *type*. The server knows how to process a particular message thanks to the type of query. The initiation of sending the first query to the server takes place when the user enters his name, then the server reads the message type and recognizes it as *ENTER_QUERY*. Next it checks whether the entered name is available and if so, it registers the user in the system. After this process, the terminal window displays instructions and a list of commands that can be used, such as joining a channel, leaving a channel, sending a private or public message, displaying a list of channels with users and leaving a chat. 
+Communication between components takes place by sending data structures, called *queries*, through message queues between the client and the server. Each of queries has its own unique number *(id)* - which is the process identifier obtained by getpid() function, *message* and *type*. The server knows how to process a particular message thanks to the type of query. The initiation of sending the first query to the server takes place when the user enters his name, then the server reads the message type and recognizes it as *ENTER_QUERY*. Next it checks whether the entered name is available and if so, it registers the user in the system. After this process, the terminal window displays instructions and a list of commands that can be used, such as joining a channel, leaving a channel, sending a private or public message, displaying a list of channels with users and leaving a chat.
+After entering any command, exactly as before a query of a certain type is sent to the server, which processes the command accordingly, often using functions from serv_utils.c - e.g. joining a channel, leaving a channel, listing users etc. The client uses function defined in client_utils.c such as displaying chat instructions or getting the current time. <br/>
+Structures used to manage channels:
+- *User* - conatains the username and his unique id.
+- *Channel* - contains channel name, user count and array of user structures.
+
+### Authors
+- Grzegorz Płaczek (148071)
+- Kamil Kałużny (148121)
