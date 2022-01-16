@@ -1,5 +1,5 @@
 # Chat server and client in C using ipc's
-This project is an assignment for PSiW at PUT. In this file, you will find a technical documentation of this project (soon : - )
+This project is an assignment for PSiW at PUT. This repository contains source code to client and server programs.
 
 ### Compilation
 
@@ -15,7 +15,12 @@ Additionally, it has a feauture that kills all message queues and currently runn
 ```
 make kill
 ```
-It is important to use this feature after exiting all programs, otherwise the chat will not work properly after restarting. Keep in mind that this command removes all IPCs in your system, so if you use any IPCs unrelated to this app, they will be removed. DON'T use this command if you want to keep other IPCs.
+
+It is important to use this feature after exiting all programs, otherwise the chat will not work properly after restarting. Keep in mind that this command removes all IPCs in your system, so if you use any IPCs unrelated to this app, they will be removed. DON'T use this command if you want to keep other IPCs.In such case, you need to manually remove IPCs created by *serv* and *client* programs and kill any remaining processes of *serv* or *client*.
+
+### Running
+
+In order to connect a client to the server, you must first run the *serv* binary and then run up to 16 instances of *client* binary. After having succesfully connected to the server, client prints out a quick list of available actions that can be performed within the application.
 
 ### Directories
 
