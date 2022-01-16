@@ -29,6 +29,7 @@ void instructions(){
     printf("%d -> czyszczenie ekranu\n", (int)CLEAR);
     printf("%d -> pomoc\n", (int)HELP);
     printf("%d -> wyjście z czatu\n", (int)EXIT);
+    printf("%d + <id kanału> -> wyświetl bufor wiadomości danego kanału\n", 240);
     printf("---------------------------------------------------------------------------\n\n");
 }
 

@@ -15,7 +15,7 @@ Additionally, it has a feauture that kills all message queues and currently runn
 ```
 make kill
 ```
-It is important to use this feature after exiting all programs, otherwise the chat will not work properly after restarting.
+It is important to use this feature after exiting all programs, otherwise the chat will not work properly after restarting. Keep in mind that this command removes all IPCs in your system, so if you use any IPCs unrelated to this app, they will be removed. DON'T use this command if you want to keep other IPCs.
 
 ### Directories
 
