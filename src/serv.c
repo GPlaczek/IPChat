@@ -62,13 +62,16 @@ int main(){
                     int rec_q = msgget(user_array[q1.type - 1].pid, IPC_CREAT | 0644);
                     q1.type = 2;
                     msgsnd(rec_q, &q1, MESSAGE_SIZE, 0);
+                }else{
+                    int mid = msgget(q1.num, IPC_CREAT | 0644);
+                    q1.type = ERROR;
+                    msgsnd(mid, &q1, MESSAGE_SIZE, 0);
                 }
             }else{
                 int mid = msgget(q1.num, IPC_CREAT | 0644);
                 q1.type = ERROR;
                 msgsnd(mid, &q1, MESSAGE_SIZE, 0);
             }
-            
         }else if(q1.type < 32){
             // PRZESYŁANIE WIADOMOŚCI DO WSZYSTKICH UŻYTKOWNIKÓW POŁĄCZONYCH Z KANAŁEM
             int chnl = CHANNEL_NUM(q1.type);
